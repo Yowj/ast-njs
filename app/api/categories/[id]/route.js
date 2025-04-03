@@ -46,3 +46,22 @@ export async function DELETE(req, { params }) {
     return handleError(error, "DELETE_CATEGORY");
   }
 }
+
+//Get a category
+export async function GET(req) {
+  try {
+    await connectDB();
+
+    const { user, error } = verifyJWT(req);
+
+    if (error) {
+      return Response.json({ Message: "Error in JWT" }, { Status: "401" });
+    }
+
+    const categories = Category.find({ user: user._id });
+
+    return Response.json(categories);
+  } catch (error) {
+    return handleError(error, "GET CATEGORIES REQUEST")
+  }
+}

@@ -11,7 +11,10 @@ export async function POST(req) {
     const { email, password } = await req.json();
 
     if (!email || !password) {
-      return Response.json({ message: "All fields are required" }, { status: 400 });
+      return Response.json(
+        { message: "All fields are required" },
+        { status: 400 }
+      );
     }
 
     const userExist = await User.findOne({ email });
@@ -34,7 +37,8 @@ export async function POST(req) {
     );
 
     // ✅ Set cookie with JWT
-    cookies().set("token", token, {
+    const cookieStore = await cookies(); // ✅ await!
+    cookieStore.set("token", token, {
       httpOnly: true,
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
